@@ -157,3 +157,84 @@ the click to react to a right click instead, then you could do
 `v-on:click.right="doSomethingWhenTheRightMouseButtonWasClicked"`. This isn't 
 exclusive to clicking, there are a bunch of key events that you can define. 
 `v-on:keyup.enter="doSomethingWhenEnterWasPressed"`
+
+## Data binding
+You can control the value of an input by using `v-bind` and `v-on`. 
+`<input type="text" v-bind:value="someValueOfOurs" v-on:input="methodThatUpdatesOurValue" />`.
+However, this is the long way of doing it. This is a common pattern, so there's a shorter
+way. You can use `v-model` and this will bind the value and react to changes in the
+input. `<input type="text" v-model="someValueOfOurs" />`
+
+## Computed properties
+When you have values that you're computing off of other values, then you can use a
+thing called computed properties. This is a method that has a dependency list. So Vue
+will recalculate the result if any of the dependencies change. To utilize this, you
+have to have a separate block in the Vue configuration called `computed`. Unlike React,
+however, you don't have to define a dependency list. Vue detects it automatically.
+
+```ts
+Vue.createApp({
+    data() { 
+        return {
+            aPropertyWeWantToCalculateFor: 'banana'        
+        };
+    },
+    // It's an object in which you define a bunch of methods.
+    computed: {
+        // When you name it, you don't name it like a method, you name it like a 
+        // property. When you're adding it into the template code, then you'll be
+        // adding it like a property. Vue will do the calling.
+        // Works similar to React's things with dependencies, however, you don't
+        // have to define the dependency list yourself. Vue tracks it automatically.
+        computedMethodThatWillBeCalledWhenItsDependenciesChange() {
+            // Here the dependency is aPropertyWeWantToCalculateFor
+            // So whenever that changes, then this method will be called.
+            return this.aPropertyWeWantToCalculateFor + ' potassium';
+        }
+    }
+})
+```
+
+```html
+<!-- Notice that this does not have parenthesis. We are not calling it. We are providing
+ a reference. Vue will do the calling as the dependencies change. -->
+<p>{{ computedMethodThatWillBeCalledWhenItsDependenciesChange }}</p>
+```
+
+## Watchers
+Similar to the previous property, we can react to changes. We can watch for a change
+in a certain value and react to it. This would not need to be included in the template.
+We need to define a new block for this in the Vue config called `watch`. It takes an
+object that's got methods in it. The method name has to be the same as the value that
+we are watching for.
+
+A potential use case for this could be sending a request as the input changes. Or if
+an input exceeds a certain limit, then we reset it back to the start. Basically
+any scenario where you want to react to a value changing.
+
+```ts
+Vue.createApp({
+    data() { 
+        return {
+            aPropertyWeAreWatching: ''        
+        };
+    },
+    watch: {
+        // Notice that the method name is the same as the data property value that we
+        // care about. They need to match. 
+        // Also, notice that you get the newValue as the first parameter and the oldValue
+        // as the second parameter.
+        aPropertyWeAreWatching(newValue, oldValue) {
+            
+        }
+    }
+})
+```
+
+```html
+<input type="text" v-model="aPropertyWeAreWatching" />
+```
+
+When considering which approach to use, be it the `methods` block, `computed` block,
+or `watch` block, refer to the below table.
+![Methods vs computed vs watch](./images/methods-vs-computed-vs-watch.PNG)
