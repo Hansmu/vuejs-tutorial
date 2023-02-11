@@ -238,3 +238,112 @@ Vue.createApp({
 When considering which approach to use, be it the `methods` block, `computed` block,
 or `watch` block, refer to the below table.
 ![Methods vs computed vs watch](./images/methods-vs-computed-vs-watch.PNG)
+
+## Shorter syntax for `v-bind` and `v-on`
+In order to have shorter code, then you can skip some boilerplate and replace
+`v-on` with an `@` symbol. So `v-on:input="someMethod"` would become `@input="someMethod"`
+Also, for `v-bind`, you can omit the `v-bind` and simply
+start from `:`. For example `v-bind:value="someValue"` becomes `:value="someValue"`. 
+If you go this route, then stick with it everywhere. Consistency is important.
+
+```html
+<input type="text" :value="someValueInOurModel" v-on:input="onInputValueChange" />
+<input type="text" @value="someValueInOurModel" @input="onInputValueChange" />
+```
+
+## Dynamic styling
+In order to apply certain styles dynamically as some values change, then you can
+bind Vue to a style property and then write Javascript inside there.
+
+Additionally, you can also bind to the class property, which is what you'll want to be
+using most of the time. Dynamic inline styles are mostly for overriding things when 
+no other options are present.
+
+```ts
+Vue.createApp({
+    data() { 
+        return {
+            someValueOfOurs: true        
+        };
+    }
+})
+```
+
+```html
+<!-- This is an example for style binding. What is happening here? 
+First, notice that we `start` style off with `:`,
+which means that we're binding the style object to Vue.
+Second, we have a Javascript object inside the style property. In the style object we
+define the usual CSS property. We can do it with either camel case, or by surrounding it
+with quotes, as that's how you use a JS object property that has funkier naming. So
+specifically in our example, we are setting the value for the CSS property known as 
+`border-color`. We can address that by doing either `borderColor` or `'border-color'`
+in the object. 
+Third, we have a value that's being defined by Vue to which we want to react and then
+change the value accordingly.
+-->
+<div
+    :style="{ borderColor: someValueOfOurs ? 'red' : 'white' }"
+>
+</div>
+
+<!-- Binding to a class is pretty much the same as binding to a style. You have the
+preceding `:` to mark the binding, and then we have two ways of deciding on a class.
+The longer, less maintainable way is using a ternary as shown in the element 
+`#less-maintainable`.
+The better option is to go with an object that has boolean values for properties.
+The object represents classes as its keys and true or false values as its values, which
+define whether the class will be applied or not. Refer to `#better-example` for this.
+Also, notice that we have a separate `class` property define as well. This is to apply
+default classes, that are always present on the DOM element. So use `:class` for dynamic
+application of classes, and `class` for default application of classes.
+--> 
+<div
+    id="less-maintainable"
+    :class="someValueOfOurs ? 'someClassThatWeHaveDefined' : 'someDefaultClass'"
+>
+</div>
+
+<div
+    id="better-example"
+    class="someDefaultClassThatIsAlwaysPresent"
+    :class="{someClassThatWeHaveDefined: someValueOfOurs}"
+>
+</div>
+```
+
+You could also move the above into a computed property. So you'd have something like.
+```ts
+Vue.createApp({
+    data() { 
+        return {
+            someValueOfOurs: true        
+        };
+    },
+    computed: {
+        classesThatWillBeAppliedAsValuesChange() {
+            return {
+                someClassThatWeHaveDefined: this.someValueOfOurs
+            };
+        }
+    }
+})
+```
+
+```html
+<div
+    class="someDefaultClassThatIsAlwaysPresent"
+    :class="classesThatWillBeAppliedAsValuesChange"
+>
+</div>
+```
+
+One additional syntax that can be used is using an array inside the bound class
+property. With this, you can apply the default class and dynamic classes in one
+property.
+```html
+<div
+    :class="[someDefaultClassThatIsAlwaysPresent, {someClassThatWeHaveDefined: someValueOfOurs}]"
+>
+</div>
+```
