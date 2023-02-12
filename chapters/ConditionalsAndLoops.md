@@ -1,3 +1,6 @@
+**A note about using conditionals and loops. If you need `v-for` and `v-if`, DON'T use
+them on the same element. Use a wrapper with `v-if` instead.**
+
 # Conditionals
 As with the rest of the interactions that Vue has with the template, then here, as well,
 we have directives that can be utilized.
