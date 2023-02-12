@@ -28,3 +28,60 @@ You should default to `v-if`, though. Go for `v-show` if you have a situation wh
 an element is constantly appearing and disappearing. In such a situation, it can help
 with performance, as only CSS changes are being made. The DOM isn't getting elements
 added to and removed from.
+
+# Loops
+In order to create a list of DOM elements based on some array that we have in
+our Vue code, then we can use the directive `v-for`. So the structure for that is
+`v-for="<localVariable> in <arrayName>"` and then the local variable becomes available
+in the DOM children, but also on the element itself. 
+
+Similar to React, you'll want to utilize the `:key` property on the elements that you're
+looping over to avoid strange bugs which come from Vue trying to optimize. Nothing
+forces you to use it, but you might start seeing some funky bugs if you omit it.
+
+It's also possible to get the current index in `v-for`. 
+`v-for="(<localVariable>, <index>) in <arrayName>"`. In case you might need it, then
+you can also use an object in the iteration. `v-for="<propertyValueVariable> in <object>"`.
+If you want to get access to the key as well, then you can do 
+`v-for="(<propertyValueVariable>, <propertyKeyVariable>) in <object>"`. You can also access
+the index as the third parameter. `v-for="(<propertyValueVariable>, <propertyKeyVariable>, <index>) in <object>"`
+
+One additional utility that might be useful is that you can loop through numbers. `v-for="num in 10"`,
+this would produce numbers 1-10.
+
+```html
+<li 
+    v-for="localVariableNameForOurCurrentArrayElement in someArrayThatWeHaveInOurJS" 
+    :key="localVariableNameForOurCurrentArrayElement"
+>
+    {{ localVariableNameForOurCurrentArrayElement }}
+</li>
+
+<li 
+    v-for="(localVariableNameForOurCurrentArrayElement, localIndexVariable) in someArrayThatWeHaveInOurJS"
+    :key="localVariableNameForOurCurrentArrayElement"
+>
+    {{ localVariableNameForOurCurrentArrayElement }}
+</li>
+
+<!-- This would iterate over the values of the object, so ´Some value´ and ´Other value´ 
+The risk here with the key is that it might be a repeated value, so using the object
+property name would be better for the key, but for the sake of the syntax example, it's
+omitted here.
+-->
+<li 
+    v-for="theValueOfTheObject in { someProperty: 'Some value', otherProp: 'Other value' }"
+    :key="theValueOfTheObject"
+>
+    {{ theValueOfTheObject }}
+</li>
+
+<!-- For objects, it'd probably be better to use the object property name for the key,
+ as it cannot repeat. -->
+<li 
+    v-for="(theValueOfTheObject, theKey, anIndex) in { someProperty: 'Some value', otherProp: 'Other value' }"
+    :key="theKey"
+>
+    {{ theValueOfTheObject }} {{ theKey }} {{ anIndex }}
+</li>
+```
