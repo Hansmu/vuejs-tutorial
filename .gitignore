@@ -321,3 +321,22 @@ $RECYCLE.BIN/
 # .pnp.*
 
 # End of https://www.toptal.com/developers/gitignore/api/webstorm+all,windows,linux,macos,yarn,node
+
+node_modules
+/dist
+
+
+# local env files
+.env.*.local
+
+# Log files
+pnpm-debug.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

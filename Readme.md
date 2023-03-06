@@ -7,3 +7,5 @@
 [Vue behind the scenes (contains refs and lifecycle)](./chapters/BehindTheScenes.md)
 
 [Components in an app](./chapters/ComponentsInApp.md)
+
+[Components in a full SPA](./chapters/ComponentsInSpa.md)
